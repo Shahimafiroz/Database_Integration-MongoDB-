@@ -1,0 +1,15 @@
+{
+  "name": "fruitsdb",
+  "version": "1.0.0",
+  "description": "Basic testing for Mongoose",
+  "main": "index.js",
+  "scripts": {
+    "test": "s"
+  },
+  "author": "Shahima",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.9.1"
+  }
+}
