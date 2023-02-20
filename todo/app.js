@@ -1,26 +1,76 @@
 const exp = require("express");
 const bp = require("body-parser");
 const date = require(__dirname + "/date.js");
+const mongoose = require("mongoose");
+const { name } = require("ejs");
 
 const app = exp();
 console.log(date);
-var newTasks = ["buyfood", "cookfood", "eatfood"];
+// var newTasks = ["buyfood", "cookfood", "eatfood"];
 var newWorkTasks = [];
 var Acts = [];
 
 app.set("view engine", "ejs");
-
 app.use(bp.urlencoded({ extended: true }));
 app.use(exp.static("public"));
+//************************************************************************ MONGODB ****************************************************************//
+// connecting mongoose//
+mongoose.set("strictQuery", false);
+mongoose.connect("mongodb://localhost:27017/todolist", {
+  useNewUrlParser: true,
+});
+// creating an items schema
+const itemsSchema = {
+  name: String,
+};
+// creating a mongoose model
+const Item = mongoose.model("Item", itemsSchema);
 
+// creating 3 default documnet objects items
+const item1 = new Item({
+  name: "Welcome to your todo list",
+});
+
+const item2 = new Item({
+  name: "Hit the + button to add a new item",
+});
+const item3 = new Item({
+  name: "<--- Hit this to delete an item",
+});
+////////////////////
+//  Insert the items into an array //
+// const defaultItems = [item1, item2, item3];
+// Item.insertMany(defaultItems, function (err) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log("sucessfully saved to defaultItems to DB");
+//   }
+// });
+// Reading the items (objects from databse ) into the console
+
+Item.find({ name: true }, function (err, foundItems) {
+  if (err) {
+    console.log(err);
+  } else {
+  }
+});
+
+//*************************************************************************************************************************************************//
 app.get("/", function (req, res) {
   let day = date.getDate();
-  res.render("list.ejs", { listTitle: day, newListItems: newTasks });
+  //items replaced newTask//
+  // mongodb -- rendering the found items
+  Item.find({}, function (err, foundItems) {
+    // console.log(foundItems);
+    res.render("list.ejs", { listTitle: day, newListItems: foundItems });
+  });
+  ///////
 });
 
 app.post("/", function (req, res) {
   var newTask = req.body.newtask;
-  // console.log(req.body);
+
   if (req.body.list === "Work List") {
     newWorkTasks.push(newTask);
     res.redirect("/work");
