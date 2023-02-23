@@ -1,3 +1,5 @@
+//************************************************************************ requiring  ****************************************************************//
+
 const exp = require("express");
 const bp = require("body-parser");
 const date = require(__dirname + "/date.js");
@@ -7,8 +9,8 @@ const { name } = require("ejs");
 const app = exp();
 console.log(date);
 // var newTasks = ["buyfood", "cookfood", "eatfood"];
-var newWorkTasks = [];
-var Acts = [];
+// var newWorkTasks = [];
+// var Acts = [];
 
 app.set("view engine", "ejs");
 app.use(bp.urlencoded({ extended: true }));
@@ -49,13 +51,13 @@ const item3 = new Item({
 
 // Reading the items (objects from databse ) into the console
 
-Item.find({ name: true }, function (err, foundItems) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("sucessfully saved to defaultItems to DB");
-  }
-});
+// Item.find({ name: true }, function (err, foundItems) {
+//   if (err) {
+//     console.log(err);
+//   } else {
+//     console.log("sucessfully saved to defaultItems to DB");
+//   }
+// });
 
 //*************************************************************************************************************************************************//
 app.get("/", function (req, res) {
@@ -87,7 +89,7 @@ app.get("/", function (req, res) {
 //*************************************************************************************************************************************************//
 app.post("/", function (req, res) {
   /************ getting items into the list from ejs remplate and pushing in the DB collection ****************/
-  const item_dynamic_name = req.body.newItem;
+  const item_dynamic_name = req.body.newtask;
   const item_n = new Item({
     name: item_dynamic_name,
   });
