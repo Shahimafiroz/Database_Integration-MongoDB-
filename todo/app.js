@@ -44,25 +44,24 @@ const item3 = new Item({
 //   if (err) {
 //     console.log(err);
 //   } else {
-//     console.log("sucessfully saved to defaultItems to DB");
 //   }
 // });
+
 // Reading the items (objects from databse ) into the console
 
 Item.find({ name: true }, function (err, foundItems) {
   if (err) {
     console.log(err);
   } else {
+    console.log("sucessfully saved to defaultItems to DB");
   }
 });
 
 //*************************************************************************************************************************************************//
 app.get("/", function (req, res) {
   let day = date.getDate();
-  //items replaced newTask//
   // mongodb -- rendering the found items
   Item.find({}, function (err, foundItems) {
-    // console.log(foundItems);
     res.render("list.ejs", { listTitle: day, newListItems: foundItems });
   });
   ///////
