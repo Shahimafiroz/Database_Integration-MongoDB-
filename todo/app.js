@@ -8,9 +8,6 @@ const { name } = require("ejs");
 
 const app = exp();
 console.log(date);
-// var newTasks = ["buyfood", "cookfood", "eatfood"];
-// var newWorkTasks = [];
-// var Acts = [];
 
 app.set("view engine", "ejs");
 app.use(bp.urlencoded({ extended: true }));
@@ -59,10 +56,10 @@ const item3 = new Item({
 //   }
 // });
 
-//*************************************************************************************************************************************************//
+//*************************************************************** HOME ROUTE **********************************************************************//
 app.get("/", function (req, res) {
   let day = date.getDate();
-  // mongodb -- rendering the found items
+  // 0. mongodb -- rendering the found items
   Item.find({}, function (err, foundItems) {
     // 1. function for inserting the array only once. we do that by checking the length of elements in the items array
     if (foundItems.length === 0) {
@@ -74,17 +71,17 @@ app.get("/", function (req, res) {
         } else {
           console.log("All items sucessfully saved into the DB");
         }
-        // End of Insert the items into an array//
-      }); //end of function for inserting the array only once. we do that by checking the length of elements in the items array
+        //2//
+      });
       //3. incase the array is empty there is nothing to render ... hence rendering the inserted items by redirecting to the root route
-      res.redirect("/");
+      res.redirect("/"); //3//
     } else {
       res.render("list.ejs", { listTitle: day, newListItems: foundItems });
     }
-    // res.render("list.ejs", { listTitle: day, newListItems: foundItems });
+    // 1//
   });
-  /****************************/
-});
+  //0//
+}); //get//
 
 //*************************************************************************************************************************************************//
 app.post("/", function (req, res) {
@@ -95,19 +92,18 @@ app.post("/", function (req, res) {
   });
   item_n.save();
   res.redirect("/");
+});
 
-  /****************************/
-  // var newTask = req.body.newtask;
-  // if (req.body.list === "Work List") {
-  //   newWorkTasks.push(newTask);
-  //   res.redirect("/work");
-  // } else if (req.body.list === "Play Time") {
-  //   Acts.push(newTask);
-  //   res.redirect("/play");
-  // } else {
-  //   newTasks.push(newTask);
-  //   res.redirect("/");
-  // }
+//******************************************************* HANDLING DELETE REQUESTS ***************************************************************//
+app.post("/delete", function (req, res) {
+  const checkedItemid = req.body.checkbox;
+  // console.log(checkedItemid);
+  Item.findByIdAndRemove(checkedItemid, function (err) {
+    if (!err) {
+      console.log("sucesssfully deleted");
+      res.redirect("/");
+    }
+  });
 });
 
 //*************************************************************************************************************************************************//
@@ -115,29 +111,6 @@ app.listen(3000, function () {
   console.log("server running on port 3000");
 });
 
-//*************************************************************************************************************************************************//
-app.get("/work", function (req, res) {
-  res.render("list", { listTitle: "Work List", newListItems: newWorkTasks });
-});
-
-app.post("/work", function (req, res) {
-  var newWorkTask = req.body.newtask;
-  newWorkTasks.push(newWorkTask);
-  res.redirect("/work");
-});
-
-//*************************************************************************************************************************************************//
-app.get("/play", function (req, res) {
-  res.render("list", { listTitle: "Play Time", newListItems: Acts });
-});
-
-app.post("/play", function (req, res) {
-  var act = req.body.newtask;
-  Acts.push(act);
-  res.redirect("/body");
-});
-
-//*************************************************************************************************************************************************//
 app.get("/about", function (req, res) {
   res.render("about");
 });
