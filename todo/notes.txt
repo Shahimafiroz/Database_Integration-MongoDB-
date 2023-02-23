@@ -1,0 +1,8 @@
+if (foundItems.lenght === 0) {
+      Item.insertMany(defaultItems, function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("sucessfully saved to defaultItems to DB");
+        }
+      });

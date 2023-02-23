@@ -86,24 +86,34 @@ app.get("/", function (req, res) {
 
 //*************************************************************************************************************************************************//
 app.post("/", function (req, res) {
-  var newTask = req.body.newtask;
+  /************ getting items into the list from ejs remplate and pushing in the DB collection ****************/
+  const item_dynamic_name = req.body.newItem;
+  const item_n = new Item({
+    name: item_dynamic_name,
+  });
+  item_n.save();
+  res.redirect("/");
 
-  if (req.body.list === "Work List") {
-    newWorkTasks.push(newTask);
-    res.redirect("/work");
-  } else if (req.body.list === "Play Time") {
-    Acts.push(newTask);
-    res.redirect("/play");
-  } else {
-    newTasks.push(newTask);
-    res.redirect("/");
-  }
+  /****************************/
+  // var newTask = req.body.newtask;
+  // if (req.body.list === "Work List") {
+  //   newWorkTasks.push(newTask);
+  //   res.redirect("/work");
+  // } else if (req.body.list === "Play Time") {
+  //   Acts.push(newTask);
+  //   res.redirect("/play");
+  // } else {
+  //   newTasks.push(newTask);
+  //   res.redirect("/");
+  // }
 });
 
+//*************************************************************************************************************************************************//
 app.listen(3000, function () {
   console.log("server running on port 3000");
 });
 
+//*************************************************************************************************************************************************//
 app.get("/work", function (req, res) {
   res.render("list", { listTitle: "Work List", newListItems: newWorkTasks });
 });
@@ -114,6 +124,7 @@ app.post("/work", function (req, res) {
   res.redirect("/work");
 });
 
+//*************************************************************************************************************************************************//
 app.get("/play", function (req, res) {
   res.render("list", { listTitle: "Play Time", newListItems: Acts });
 });
@@ -124,6 +135,7 @@ app.post("/play", function (req, res) {
   res.redirect("/body");
 });
 
+//*************************************************************************************************************************************************//
 app.get("/about", function (req, res) {
   res.render("about");
 });
