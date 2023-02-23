@@ -62,11 +62,29 @@ app.get("/", function (req, res) {
   let day = date.getDate();
   // mongodb -- rendering the found items
   Item.find({}, function (err, foundItems) {
-    res.render("list.ejs", { listTitle: day, newListItems: foundItems });
+    // 1. function for inserting the array only once. we do that by checking the length of elements in the items array
+    if (foundItems.length === 0) {
+      // 2. Insert the items into an array //
+      const defaultItems = [item1, item2, item3];
+      Item.insertMany(defaultItems, function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("All items sucessfully saved into the DB");
+        }
+        // End of Insert the items into an array//
+      }); //end of function for inserting the array only once. we do that by checking the length of elements in the items array
+      //3. incase the array is empty there is nothing to render ... hence rendering the inserted items by redirecting to the root route
+      res.redirect("/");
+    } else {
+      res.render("list.ejs", { listTitle: day, newListItems: foundItems });
+    }
+    // res.render("list.ejs", { listTitle: day, newListItems: foundItems });
   });
-  ///////
+  /****************************/
 });
 
+//*************************************************************************************************************************************************//
 app.post("/", function (req, res) {
   var newTask = req.body.newtask;
 
