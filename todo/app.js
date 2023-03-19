@@ -36,15 +36,23 @@ const item2 = new Item({
 const item3 = new Item({
   name: "<--- Hit this to delete an item",
 });
+
+const listSchema = {
+  name: String,
+  items: [itemsSchema],
+};
+
+const List = mongoose.model("List", listSchema);
+
 ////////////////////
 //  Insert the items into an array //
-// const defaultItems = [item1, item2, item3];
-// Item.insertMany(defaultItems, function (err) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//   }
-// });
+const defaultItems = [item1, item2, item3];
+Item.insertMany(defaultItems, function (err) {
+  if (err) {
+    console.log(err);
+  } else {
+  }
+});
 
 // Reading the items (objects from databse ) into the console
 
@@ -82,10 +90,27 @@ app.get("/", function (req, res) {
   });
   //0//
 }); //get//
-//*************************************************************************************************************************************************//
+//*******************************************EXpress route pramas *******************************************************//
 
 app.get("/:customListName", function (req, res) {
-  console.log(req.params.customListName);
+  const customListName = req.params.customListName;
+  ////////////////////
+  List.find({ name: customListName }, function (err, foundList) {
+    if (!err) {
+      if (!foundList) {
+        console.log("Dosent exist");
+      } else {
+        console.log("Exists!");
+      }
+    }
+  });
+  //////////////
+
+  const list = new List({
+    name: customListName,
+    items: defaultItems,
+  });
+  list.save();
 });
 
 //*************************************************************************************************************************************************//
